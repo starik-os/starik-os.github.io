@@ -10,7 +10,81 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://starik-os.github.io">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- SELF-HOSTED FONTS (DSGVO-konform, keine Google-Server-Verbindung) -->
+<style>
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/instrument-serif-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/instrument-serif-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('./fonts/dm-sans-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/dm-sans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/dm-sans-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/dm-sans-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/dm-sans-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-700.woff2') format('woff2');
+}
+</style>
+
 <style>
 :root {
   --bg: #0a0a0a;
@@ -215,14 +289,38 @@ section p strong { color: var(--text); font-weight: 500; }
 }
 .waitlist-form input[type="email"]:focus { border-color: var(--accent); }
 .waitlist-form input[type="email"]::placeholder { color: var(--text-tiny); }
+
+/* DSGVO Consent Checkbox */
+.consent-row {
+  width: 100%; display: flex; align-items: flex-start;
+  gap: 10px; margin-top: 12px; text-align: left;
+}
+.consent-row input[type="checkbox"] {
+  margin-top: 3px; accent-color: var(--accent);
+  width: 16px; height: 16px; flex-shrink: 0; cursor: pointer;
+}
+.consent-row label {
+  font-size: 12px; color: var(--text-dim); line-height: 1.5; cursor: pointer;
+}
+.consent-row a { color: var(--accent); text-decoration: underline; }
+.consent-row a:hover { color: #d4b86a; }
+
 .waitlist-note { font-size: 12px; color: var(--text-tiny); margin-top: 16px; text-align: center; }
 .form-success { display: none; text-align: center; padding: 20px; }
 .form-success .check { font-size: 32px; color: var(--green); margin-bottom: 12px; }
 .form-success p { color: var(--text-dim); font-size: 15px; }
+.form-error { color: var(--red); font-size: 12px; margin-top: 8px; text-align: center; display: none; }
 
 .footer { padding: 60px 0; text-align: center; border-top: 1px solid var(--border); }
 .footer-sig { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 18px; color: var(--accent); margin-bottom: 12px; }
 .footer p { color: var(--text-tiny); font-size: 12px; margin-bottom: 4px; }
+.footer-links { margin-top: 16px; }
+.footer-links a {
+  color: var(--text-tiny); font-size: 12px;
+  text-decoration: none; margin: 0 12px;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--accent); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
@@ -405,7 +503,12 @@ section p strong { color: var(--text); font-weight: 500; }
       <div class="waitlist-form">
         <input type="email" id="emailInput" placeholder="Deine E-Mail-Adresse" required>
         <button class="btn btn-primary" onclick="submitWaitlist()">Eintragen</button>
+        <div class="consent-row">
+          <input type="checkbox" id="consentCheck">
+          <label for="consentCheck">Ich stimme zu, dass meine E-Mail-Adresse zum Zweck der Warteliste gespeichert wird. Ich kann diese Einwilligung jederzeit per E-Mail an starikdaniel3@hotmail.com widerrufen. Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.</label>
+        </div>
       </div>
+      <div class="form-error" id="formError"></div>
       <p class="waitlist-note">Kein Spam. Kein Newsletter. Nur die Einladung, wenn es soweit ist.</p>
     </div>
     <div class="form-success" id="formSuccess">
@@ -421,6 +524,10 @@ section p strong { color: var(--text); font-weight: 500; }
     <p>Für Menschen, die klarer denken wollen.</p>
     <p style="margin-top: 16px;">© 2025–2026 Daniel Starik. Alle Rechte vorbehalten.</p>
     <p>Autor & Architekt: Daniel Starik | Berlin</p>
+    <div class="footer-links">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </div>
   </div>
 </div>
 
@@ -434,17 +541,62 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 function submitWaitlist() {
   const email = document.getElementById('emailInput').value;
-  if (!email || !email.includes('@')) {
+  const consent = document.getElementById('consentCheck').checked;
+  const errorEl = document.getElementById('formError');
+
+  // Validierung
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    errorEl.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+    errorEl.style.display = 'block';
     document.getElementById('emailInput').style.borderColor = '#c45a5a';
     return;
   }
-  window.location.href = 'mailto:daniel@starik.de?subject=STARIK OS Warteliste&body=Bitte setzt mich auf die Warteliste. Meine E-Mail: ' + encodeURIComponent(email);
-  document.getElementById('waitlistForm').style.display = 'none';
-  document.getElementById('formSuccess').style.display = 'block';
+  if (!consent) {
+    errorEl.textContent = 'Bitte stimme der Datenschutzerklärung zu.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  errorEl.style.display = 'none';
+
+  // Google Sheets Backend
+  // ANLEITUNG: Ersetze GOOGLE_SCRIPT_URL durch die URL deiner Google Apps Script Web App
+  const GOOGLE_SCRIPT_URL = 'GOOGLE_SCRIPT_URL';
+
+  if (GOOGLE_SCRIPT_URL === 'GOOGLE_SCRIPT_URL') {
+    // Fallback: mailto wenn Google Sheets noch nicht eingerichtet
+    window.location.href = 'mailto:starikdaniel3@hotmail.com?subject=STARIK%20OS%20Warteliste&body=Bitte%20setzt%20mich%20auf%20die%20Warteliste.%20Meine%20E-Mail:%20' + encodeURIComponent(email);
+    document.getElementById('waitlistForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+    return;
+  }
+
+  // Google Sheets Submission
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      timestamp: new Date().toISOString(),
+      source: 'starik-os.github.io'
+    })
+  }).then(() => {
+    document.getElementById('waitlistForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }).catch(() => {
+    // Fallback bei Fehler
+    window.location.href = 'mailto:starikdaniel3@hotmail.com?subject=STARIK%20OS%20Warteliste&body=Bitte%20setzt%20mich%20auf%20die%20Warteliste.%20Meine%20E-Mail:%20' + encodeURIComponent(email);
+    document.getElementById('waitlistForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
 }
+
 document.getElementById('emailInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') submitWaitlist();
 });
 </script>
 </body>
 </html>
+
+
