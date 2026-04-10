@@ -572,24 +572,10 @@ function submitWaitlist() {
   }
 
   // Google Sheets Submission
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email,
-      timestamp: new Date().toISOString(),
-      source: 'starik-os.github.io'
-    })
-  }).then(() => {
-    document.getElementById('waitlistForm').style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
-  }).catch(() => {
-    // Fallback bei Fehler
-    window.location.href = 'mailto:starikdaniel3@hotmail.com?subject=STARIK%20OS%20Warteliste&body=Bitte%20setzt%20mich%20auf%20die%20Warteliste.%20Meine%20E-Mail:%20' + encodeURIComponent(email);
-    document.getElementById('waitlistForm').style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
-  });
+  const img = new Image();
+  img.src = GOOGLE_SCRIPT_URL + '?email=' + encodeURIComponent(email) + '&timestamp=' + encodeURIComponent(new Date().toISOString()) + '&source=starik-os.github.io';
+  document.getElementById('waitlistForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
 }
 
 document.getElementById('emailInput').addEventListener('keydown', (e) => {
@@ -598,6 +584,7 @@ document.getElementById('emailInput').addEventListener('keydown', (e) => {
 </script>
 </body>
 </html>
+
 
 
 
