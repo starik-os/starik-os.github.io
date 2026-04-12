@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#0f0f0f">
+<title>Haushalt</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-txt">Haushalt lädt...</div>
+</div>
+
+<!-- ── DASHBOARD ──────────────────────────────────────────── -->
+<div class="page on" id="p-dashboard">
+  <div class="hdr">
+    <div class="hdr-brand">💰 Haushalt</div>
+    <div class="hdr-actions">
+      <button class="hdr-btn" onclick="App.exportPDF()">📄 PDF</button>
+      <button class="hdr-btn" onclick="App.exportCSV()">CSV</button>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="mo-nav">
+      <button class="mo-btn" onclick="UI.changeMonth(-1)">‹</button>
+      <div class="mo-label-wrap">
+        <div class="mo-lbl" id="mo-label">März 2026</div>
+        <div class="mo-carry" id="d-carry" onclick="App.editCarryOver()">Übertrag: 0,00 €</div>
+      </div>
+      <button class="mo-btn" onclick="UI.changeMonth(1)">›</button>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-lbl">Einnahmen</div>
+        <div class="stat-val c-green" id="d-income">0,00 €</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl">Ausgaben</div>
+        <div class="stat-val c-red" id="d-expenses">0,00 €</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl">Bilanz</div>
+        <div class="stat-val" id="d-balance">0,00 €</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl">Ø pro Tag</div>
+        <div class="stat-val c-amber" id="d-daily">0,00 €</div>
+      </div>
+    </div>
+    <div class="sec">Kategorien</div>
+    <div class="card"><div class="card-inner" id="d-cats"></div></div>
+    <div class="sec">Letzte Buchungen</div>
+    <div id="d-recent"></div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ── BUCHUNGEN ──────────────────────────────────────────── -->
+<div class="page" id="p-list">
+  <div class="hdr">
+    <div class="hdr-brand">📋 Buchungen</div>
+  </div>
+  <div class="search-wrap">
+    <input class="search-inp" type="search" placeholder="Suchen..." id="search-inp" oninput="App.setSearch(this.value)">
+  </div>
+  <div class="chip-row" id="cat-chips"></div>
+  <div class="scroll" id="tx-list-wrap"></div>
+</div>
+
+<!-- ── IMPORT/SCAN ─────────────────────────────────────────── -->
+<div class="page" id="p-import">
+  <div class="hdr">
+    <div class="hdr-brand">🧾 Import & Scan</div>
+  </div>
+  <div class="scroll">
+
+    <!-- BON SCAN -->
+    <div class="sec">Kassenbon scannen</div>
+    <div class="scan-area">
+      <div style="font-size:40px;margin-bottom:8px">🧾</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px">Bon fotografieren</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:14px">KI liest den Bon aus – du prüfst vor dem Speichern</div>
+      <label class="drop-btn" for="scan-file">📷 Foto / Datei wählen</label>
+      <input type="file" id="scan-file" accept="image/*" style="display:none" onchange="App.handleScan(this)">
+    </div>
+    <div style="padding:0 14px" id="scan-result-wrap"></div>
+
+    <!-- CSV IMPORT -->
+    <div class="sec">CSV Import (Kontoauszug)</div>
+    <div class="drop-zone" id="drop-zone">
+      <div class="drop-icon">📄</div>
+      <div class="drop-lbl">CSV-Datei importieren</div>
+      <div class="drop-sub">Sparkasse · N26 · DKB · Commerzbank · ING</div>
+      <label class="drop-btn" for="csv-file">Datei wählen</label>
+      <input type="file" id="csv-file" accept=".csv,.txt" style="display:none" onchange="App.handleCSVFile(this)">
+    </div>
+    <div style="padding:0 14px" id="csv-result"></div>
+
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ── MEHR ───────────────────────────────────────────────── -->
+<div class="page" id="p-settings">
+  <div class="hdr">
+    <div class="hdr-brand">⚙️ Mehr</div>
+  </div>
+  <div class="scroll">
+
+    <div class="sec">Gutscheine / Guthaben</div>
+    <div class="card"><div class="card-inner" id="coupons-list"></div></div>
+
+    <div class="sec">Export</div>
+    <div class="card">
+      <div class="card-inner">
+        <div class="setting-row" onclick="App.exportCSV()">
+          <div class="setting-lbl">📤 CSV exportieren</div>
+          <div class="setting-val">Alle Daten →</div>
+        </div>
+        <div class="setting-row" onclick="App.exportPDF()">
+          <div class="setting-lbl">📄 PDF Monatsbericht</div>
+          <div class="setting-val">Aktueller Monat →</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">Daten</div>
+    <div class="card">
+      <div class="card-inner">
+        <div class="setting-row" onclick="App.clearAll()">
+          <div class="setting-lbl" style="color:var(--red)">🗑️ Alle Daten löschen</div>
+          <div class="setting-val" style="color:var(--red)">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:14px;font-size:11px;color:var(--txt3);text-align:center">
+      Haushalt v2.0 · Daten lokal auf deinem Gerät · Kein Server
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ─────────────────────────────────────────── -->
+<nav class="nav">
+  <button class="nav-btn on" data-tab="dashboard" onclick="UI.goTab('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-btn" data-tab="list" onclick="UI.goTab('list')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    Buchungen
+  </button>
+  <button class="nav-fab" onclick="UI.openAddModal()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+  <button class="nav-btn" data-tab="import" onclick="UI.goTab('import')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4M21 9V5a2 2 0 00-2-2h-4M21 15v4a2 2 0 01-2 2h-4M7 12h10"/></svg>
+    Import
+  </button>
+  <button class="nav-btn" data-tab="settings" onclick="UI.goTab('settings')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12H22M2 12H4M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20V22M12 2v2"/></svg>
+    Mehr
+  </button>
+</nav>
+
+<!-- ── ADD MODAL ──────────────────────────────────────────── -->
+<div class="modal-bg" id="add-modal" onclick="if(event.target===this)UI.closeModal('add-modal')">
+  <div class="modal" style="position:relative">
+    <div class="modal-title" id="f-modal-title">Buchung hinzufügen</div>
+    <button class="modal-close" onclick="UI.closeModal('add-modal')">✕</button>
+    <input type="hidden" id="f-edit-id">
+    <div class="type-toggle">
+      <button class="type-btn on" data-type="expense" onclick="App.setEntryType('expense')">− Ausgabe</button>
+      <button class="type-btn" data-type="income" onclick="App.setEntryType('income')">+ Einnahme</button>
+    </div>
+    <div class="fld">
+      <label>Datum</label>
+      <input type="date" class="inp" id="f-date">
+    </div>
+    <div class="fld" id="f-store-wrap">
+      <label>Laden / Quelle</label>
+      <input type="text" class="inp" id="f-store" placeholder="z.B. Edeka, Lidl..." oninput="UI.autoDetectCategory()">
+    </div>
+    <div class="fld">
+      <label>Beschreibung</label>
+      <input type="text" class="inp" id="f-desc" placeholder="z.B. Lebensmittel" oninput="UI.autoDetectCategory()">
+    </div>
+    <div class="fld">
+      <label>Kategorie</label>
+      <select class="inp" id="f-cat"></select>
+    </div>
+    <div class="fld">
+      <label>Betrag (€)</label>
+      <input type="number" class="inp" id="f-amt" placeholder="0,00" step="0.01" min="0.01" inputmode="decimal">
+    </div>
+    <button class="btn-primary" onclick="App.saveEntry()">Speichern</button>
+  </div>
+</div>
+
+<!-- SCRIPTS (Reihenfolge: utils → debug → storage → state → categories → validation → months → transactions → csv → pdf → ocr → ui → app) -->
+<script src="debug.js"></script>
+<script src="utils.js"></script>
+<script src="storage.js"></script>
+<script src="state.js"></script>
+<script src="categories.js"></script>
+<script src="validation.js"></script>
+<script src="months.js"></script>
+<script src="transactions.js"></script>
+<script src="csv.js"></script>
+<script src="pdf.js"></script>
+<script src="ocr.js"></script>
+<script src="ui.js"></script>
+<script src="app.js"></script>
+
+<script>
+// Drag & Drop CSV
+const dz = document.getElementById('drop-zone');
+if(dz){
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('drag');
+    const f = e.dataTransfer.files[0];
+    if(f){ const fake = { files:[f], value:'' }; App.handleCSVFile(fake); }
+  });
+}
+// openAddModal alias für nav-fab
+UI.openAddModal = () => { App.setEntryType('expense'); App.editCarryOver; };
+document.querySelector('.nav-fab').onclick = () => {
+  App.setEntryType('expense');
+  document.getElementById('f-edit-id').value = '';
+  document.getElementById('f-date').value = (()=>{const d=new Date();return d.toISOString().slice(0,10)})();
+  document.getElementById('f-store').value = '';
+  document.getElementById('f-desc').value = '';
+  document.getElementById('f-amt').value = '';
+  const sel = document.getElementById('f-cat');
+  if(sel) sel.innerHTML = Categories.getAll().map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+  document.getElementById('f-modal-title').textContent = 'Buchung hinzufügen';
+  UI.openModal('add-modal');
+  setTimeout(()=>document.getElementById('f-amt').focus(),100);
+};
+</script>
+
+</body>
+</html>
