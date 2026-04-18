@@ -50,7 +50,18 @@ const Utils = (() => {
 
   const escHtml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-  const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  // Einfacher UUID-Generator (RFC4122 v4 kompatibel)
+  const uuid = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  };
+
+  // uid() nutzt deviceId-Präfix sobald verfügbar (wird von Storage.getDeviceId gesetzt)
+  let _devicePrefix = 'local';
+  const setDevicePrefix = (prefix) => { _devicePrefix = prefix || 'local'; };
+  const uid = () => `${_devicePrefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   const daysInMonth = (key) => {
     const [y, m] = key.split('-').map(Number);
@@ -59,5 +70,5 @@ const Utils = (() => {
 
   const sortDesc = (arr, key) => [...arr].sort((a, b) => (b[key] || '').localeCompare(a[key] || ''));
 
-  return { formatMoney, formatDate, toISODate, todayISO, monthKey, monthLabel, parseAmount, escHtml, uid, daysInMonth, sortDesc };
+  return { formatMoney, formatDate, toISODate, todayISO, monthKey, monthLabel, parseAmount, escHtml, uid, uuid, setDevicePrefix, daysInMonth, sortDesc };
 })();

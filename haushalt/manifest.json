@@ -4,7 +4,7 @@
   "description": "Privates Haushaltsbuch – lokal, sicher, schnell",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f0f0f",
+  "background_color": "#BA7517",
   "theme_color": "#0f0f0f",
   "orientation": "portrait-primary",
   "icons": [

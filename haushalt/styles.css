@@ -190,3 +190,60 @@ select.inp option{background:var(--bg2)}
 
 /* SEC LABEL */
 .sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin:10px 0 6px}
+
+/* ── FIXKOSTEN / VARIABLE SPLIT ─────────────────────────────── */
+.fixvar-item{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.fixvar-item:last-child{border:none}
+.fixvar-lbl{font-size:13px;color:var(--txt2)}
+.fixvar-amt{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.fix-badge{font-size:9px;font-weight:700;background:rgba(147,51,234,.2);color:#a855f7;padding:1px 5px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle}
+
+/* ── AUSGABEN-VERLAUF ────────────────────────────────────────── */
+.prog-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.prog-lbl{font-size:11px;color:var(--txt2)}
+.prog-day{font-size:11px;color:var(--txt3)}
+.prog-bar-wrap{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.prog-bar{height:100%;border-radius:3px;transition:width .4s}
+
+/* ── TX ITEMS (Lebensmittel Positionen) ──────────────────────── */
+.tx-items{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tx-item-chip{font-size:10px;background:var(--bg4);color:var(--txt3);padding:2px 7px;border-radius:10px;white-space:nowrap}
+
+/* ── EDIT BUTTON ─────────────────────────────────────────────── */
+.tx-del{color:var(--txt3);padding:3px 7px;font-size:14px;line-height:1;background:none;border:none;cursor:pointer}
+.tx-del:hover{color:var(--gold)}
+
+/* ── PARTNER / GERÄT ─────────────────────────────────────────── */
+.device-badge{font-size:9px;font-weight:700;background:rgba(37,99,235,.18);color:#60a5fa;padding:1px 6px;border-radius:4px;margin-left:5px;letter-spacing:.03em;vertical-align:middle}
+.info-box{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);border-radius:var(--r);padding:12px;color:#93c5fd;font-size:13px;margin-bottom:10px}
+
+/* ── SCOPE BADGES ────────────────────────────────────────────── */
+.scope-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:5px;vertical-align:middle;letter-spacing:.03em}
+.scope-badge.side{background:rgba(14,165,233,.18);color:#38bdf8}
+.scope-badge.reserve{background:rgba(186,117,23,.18);color:#EF9F27}
+.scope-badge.obligation{background:rgba(239,68,68,.18);color:#f87171}
+
+/* ── STATUS BADGES ───────────────────────────────────────────── */
+.status-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle;text-transform:uppercase;letter-spacing:.04em}
+.status-badge.open{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.status-badge.paid{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
+.status-badge.cancelled{background:rgba(100,116,139,.15);color:#94a3b8}
+
+/* ── TAX BADGE ───────────────────────────────────────────────── */
+.tax-badge{font-size:9px;font-weight:700;background:rgba(124,58,237,.18);color:#a78bfa;padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
+
+/* ── ERWEITERTE DASHBOARD BLÖCKE ─────────────────────────────── */
+#d-extra{padding:0 14px 4px}
+.extra-block{border-radius:var(--r);padding:14px;margin-bottom:10px}
+.extra-block.reserve-block{background:rgba(186,117,23,.08);border:1px solid rgba(186,117,23,.2)}
+.extra-block.side-block{background:rgba(14,165,233,.06);border:1px solid rgba(14,165,233,.15)}
+.extra-block.obligation-block{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)}
+.extra-block.fixstatus-block{background:rgba(100,116,139,.07);border:1px solid rgba(100,116,139,.18)}
+.extra-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:var(--txt);margin-bottom:5px}
+.extra-hint{font-size:11px;color:var(--txt3)}
+.extra-items{margin-top:8px;display:flex;flex-direction:column;gap:5px}
+.extra-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--txt2);gap:8px}
+.extra-item span:first-child{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.extra-more{font-size:11px;color:var(--txt3);margin-top:4px}
+.extra-real-avail{font-size:12px;color:var(--txt2);margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
+.c-muted{color:var(--txt3)}

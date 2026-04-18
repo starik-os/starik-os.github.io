@@ -6,9 +6,12 @@ const State = (() => {
     transactions: [],
     months: {},
     filterCat: 'all',
+    filterScope: 'all',
     searchQuery: '',
     loading: false,
     initialized: false,
+    deviceId: '',
+    deviceName: '',
   };
 
   const get = () => _state;
